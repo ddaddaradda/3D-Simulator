@@ -36,6 +36,8 @@ const s3ConvertBtn = document.getElementById('s3-convert-btn');
 const s3MoveBtn = document.getElementById('s3-move-btn');
 const s3Status = document.getElementById('s3-status');
 
+const localWrapper = document.getElementById('local-wrapper');
+const s3Wrapper = document.getElementById('s3-wrapper');
 
 // --- Simulation Class ---
 class Simulation {

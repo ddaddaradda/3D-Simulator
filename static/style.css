@@ -61,6 +61,10 @@ body {
 }
 
 /* --- S3 Controls --- */
+.hidden {
+    display: none !important;
+}
+
 #s3-source-panel {
     display: flex;
     flex-direction: column;
@@ -104,8 +108,8 @@ body {
 
 .content { display: flex; flex-direction: column; gap: 12px; }
 .simulation-wrapper { display: flex; flex-direction: column; gap: 8px; }
-.simulation-container {
-    /* Maintain 4:3 aspect ratio relative to height */
+/* .simulation-container {
+    Maintain 4:3 aspect ratio relative to height 
     min-height: 360px;
     width: 100%;
     max-height: 70vh;
@@ -115,6 +119,27 @@ body {
     box-shadow: 0 10px 24px rgba(0,0,0,0.35);
     position: relative;
     background-color: #0b1220;
+/} */
+
+.simulation-container {
+    min-height: 540px;            /* 기존보다 0.5배 증가 */
+    max-height: 105vh;            /* 화면 비율 제한 */
+    height: auto;
+
+    min-width: calc(1.3 * 540px); /* width 최소값 = height 기준 1.3배 */
+    width: 100%;                  /* 브라우저에 맞춰 늘어남 */
+    max-width: 100vw;             /* 화면 넘치지 않도록 제한 */
+
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 10px;
+    box-shadow: 0 10px 24px rgba(0,0,0,0.35);
+    position: relative;
+    background-color: #0b1220;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 .data-display {

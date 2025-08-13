@@ -35,25 +35,27 @@
                 </div>
 
                 <!-- S3 Selector -->
-                <div id="s3-source-panel" class="hidden">
-                    <label for="s3-sensor-type" class="label">Sensor Type</label>
-                    <select id="s3-sensor-type" class="select">
-                        <option value="ble">BLE</option>
-                        <option value="LTE">LTE</option>
-                    </select>
-                    <label for="s3-date" class="label">Date</label>
-                    <input type="date" id="s3-date" class="select">
-                    <label for="s3-sensor-id" class="label">Sensor ID</label>
-                    <select id="s3-sensor-id" class="select" disabled>
-                        <option>Select Type/Date first</option>
-                    </select>
-                    <div class="s3-actions">
-                        <button id="s3-download-btn" class="btn" disabled>Download</button>
-                        <button id="s3-convert-btn" class="btn" disabled>Convert</button>
-                        <button id="s3-move-btn" class="btn" disabled>Move to Local</button>
+                
+                    <div id="s3-source-panel" class="hidden">
+                        <label for="s3-sensor-type" class="label">Sensor Type</label>
+                        <select id="s3-sensor-type" class="select">
+                            <option value="ble">BLE</option>
+                            <option value="LTE">LTE</option>
+                        </select>
+                        <label for="s3-date" class="label">Date</label>
+                        <input type="date" id="s3-date" class="select">
+                        <label for="s3-sensor-id" class="label">Sensor ID</label>
+                        <select id="s3-sensor-id" class="select" disabled>
+                            <option>Select Type/Date first</option>
+                        </select>
+                        <div class="s3-actions">
+                            <button id="s3-download-btn" class="btn" disabled>Download</button>
+                            <button id="s3-convert-btn" class="btn" disabled>Convert</button>
+                            <button id="s3-move-btn" class="btn" disabled>Move to Local</button>
+                        </div>
+                        <div id="s3-status" class="file-meta"></div>
                     </div>
-                    <div id="s3-status" class="file-meta"></div>
-                </div>
+                
             </div>
             <div class="panel">
                 <div class="panel-title">Object</div>
