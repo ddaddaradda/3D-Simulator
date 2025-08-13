@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Simulation Comparison</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="app-header">
+        <div class="brand">3D Orientation Simulator</div>
+        <div class="header-actions">
+            <button id="camera-mode-toggle" class="btn">Free Camera: OFF</button>
+        </div>
+    </div>
+
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="panel">
+                <div class="panel-title">Dataset Source</div>
+                <div class="data-source-toggle">
+                    <button id="source-local-btn" class="btn active">Local</button>
+                    <button id="source-s3-btn" class="btn">S3</button>
+                </div>
+
+                <!-- Local File Selector -->
+                <div id="local-source-panel">
+                    <label for="file-select" class="label">File</label>
+                    <select id="file-select" class="select"></select>
+                    <div id="file-meta" class="file-meta">No file selected</div>
+                    <div class="local-actions">
+                        <button id="local-import-btn" class="btn primary">Import</button>
+                        <button id="local-delete-btn" class="btn">Delete Local</button>
+                    </div>
+                </div>
+
+                <!-- S3 Selector -->
+                <div id="s3-source-panel" class="hidden">
+                    <label for="s3-sensor-type" class="label">Sensor Type</label>
+                    <select id="s3-sensor-type" class="select">
+                        <option value="ble">BLE</option>
+                        <option value="LTE">LTE</option>
+                    </select>
+                    <label for="s3-date" class="label">Date</label>
+                    <input type="date" id="s3-date" class="select">
+                    <label for="s3-sensor-id" class="label">Sensor ID</label>
+                    <select id="s3-sensor-id" class="select" disabled>
+                        <option>Select Type/Date first</option>
+                    </select>
+                    <div class="s3-actions">
+                        <button id="s3-download-btn" class="btn" disabled>Download</button>
+                        <button id="s3-convert-btn" class="btn" disabled>Convert</button>
+                        <button id="s3-move-btn" class="btn" disabled>Move to Local</button>
+                    </div>
+                    <div id="s3-status" class="file-meta"></div>
+                </div>
+            </div>
+            <div class="panel">
+                <div class="panel-title">Object</div>
+                <label for="object-select" class="label">Type</label>
+                <select id="object-select" class="select">
+                    <option value="wheelchair">TYPE A</option>
+                    <option value="motorcycle">TYPE B</option>
+                </select>
+            </div>
+            <div class="panel small">
+                <div class="panel-title">Shortcuts</div>
+                <ul class="tips">
+                    <li>Free cam: click button → 화면 클릭</li>
+                    <li>이동: W/A/S/D, 위/아래: Space/Shift</li>
+                    <li>종료: ESC</li>
+                </ul>
+            </div>
+        </aside>
+
+        <main class="content">
+            <div id="sim-container" class="simulation-container">
+                <div id="hud" class="hud">
+                    <div class="kpis">
+                        <div class="kpi"><span class="kpi-label">Pitch</span><span id="hud-pitch" class="kpi-value">0.00°</span></div>
+                        <div class="kpi"><span class="kpi-label">Roll</span><span id="hud-roll" class="kpi-value">0.00°</span></div>
+                        <div class="kpi"><span class="kpi-label">Yaw</span><span id="hud-yaw" class="kpi-value">0.00°</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="controls">
+                <div class="controls-row">
+                    <button id="play-toggle" class="btn primary">Play</button>
+                    <label for="speed-select">Speed</label>
+                    <select id="speed-select" class="select">
+                        <option value="0.5">0.5x</option>
+                        <option value="1" selected>1x</option>
+                        <option value="2">2x</option>
+                        <option value="4">4x</option>
+                    </select>
+                </div>
+                <div class="controls-row">
+                    <label for="time-slider">Time</label>
+                    <input type="range" id="time-slider" min="0" max="100" value="0" step="1">
+                    <span id="timestamp-display"></span>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Three.js Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- Three.js Add-ons -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/PointerLockControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/renderers/CSS2DRenderer.js"></script>
+
+    <!-- Main simulation script -->
+    <script src="/static/main.js"></script>
+</body>
+</html>
