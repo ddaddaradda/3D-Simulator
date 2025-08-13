@@ -50,6 +50,12 @@ body {
     opacity: 1;
     font-weight: 600;
 }
+
+/* Explicitly hide S3 panel when Local is active */
+#source-local-btn.active + #source-s3-btn + #s3-source-panel {
+    display: none;
+}
+
 .hidden {
     display: none;
 }
@@ -101,7 +107,8 @@ body {
 .simulation-container {
     /* Maintain 4:3 aspect ratio relative to height */
     min-height: 360px;
-    width: auto; /* let width be derived from height via aspect-ratio */
+    width: 100%;
+    max-height: 70vh;
     max-width: 100%;
     border: 1px solid rgba(255,255,255,0.08);
     border-radius: 10px;
@@ -135,6 +142,16 @@ body {
     align-items: center;
     gap: 10px;
     flex-wrap: wrap;
+    justify-content: space-between; /* Distribute items with space between */
+}
+
+.controls-row label {
+    white-space: nowrap; /* Prevent labels from wrapping */
+}
+
+.controls-row select {
+    flex-grow: 1; /* Allow select to grow and take available space */
+    max-width: 120px; /* Limit max width for speed select */
 }
 
 #time-slider { width: 100%; max-width: 640px; cursor: pointer; }

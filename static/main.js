@@ -159,13 +159,10 @@ class Simulation {
     }
 
     onResize() {
-        const newHeight = this.container.clientHeight;
-        const newWidth = (newHeight / 3) * 4; // Enforce 4:3 aspect ratio based on height
-
-        this.camera.aspect = newWidth / newHeight;
+        this.camera.aspect = this.container.clientWidth / this.container.clientHeight;
         this.camera.updateProjectionMatrix();
-        this.renderer.setSize(newWidth, newHeight);
-        this.labelRenderer.setSize(newWidth, newHeight);
+        this.renderer.setSize(this.container.clientWidth, this.container.clientHeight);
+        this.labelRenderer.setSize(this.container.clientWidth, this.container.clientHeight);
     }
 
     setObjectModel(kind) {
