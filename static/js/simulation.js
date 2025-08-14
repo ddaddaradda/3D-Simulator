@@ -101,7 +101,7 @@ class Simulation {
         if (!dataPoint) return;
         const { pitch, roll, yaw } = dataPoint;
         const mappedPitch = -pitch;
-        const mappedRoll = roll;
+        const mappedRoll = -roll; // Negative roll tilts right on screen
         this.objectGroup.rotation.set(mappedPitch, mappedRoll, yaw, 'ZYX');
 
         const pitchDeg = (pitch * 180 / Math.PI).toFixed(2);
