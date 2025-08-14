@@ -222,7 +222,8 @@ class Simulation {
         this.camera.getWorldDirection(forward);
         forward.z = 0;
         if (forward.lengthSq() > 0) forward.normalize();
-        const right = new THREE.Vector3().crossVectors(forward, new THREE.Vector3(0, 0, 1)).negate();
+        // Right vector derived from forward x up (Z-up); no negate
+        const right = new THREE.Vector3().crossVectors(forward, new THREE.Vector3(0, 0, 1));
         const up = new THREE.Vector3(0, 0, 1);
         const pos = this.camera.position;
         if (this.keyState.forward) pos.addScaledVector(forward, velocity);
