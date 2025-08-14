@@ -140,13 +140,14 @@ class Simulation {
             child.material?.dispose?.();
         }
         if (kind === 'motorcycle') {
+            // Face order for BoxGeometry materials: +X, -X, +Y(front), -Y(back), +Z, -Z
             const bodyMaterials = [
-                new THREE.MeshStandardMaterial({ color: 0x1565C0, metalness: 0.2, roughness: 0.6 }),
-                new THREE.MeshStandardMaterial({ color: 0x1565C0, metalness: 0.2, roughness: 0.6 }),
-                new THREE.MeshStandardMaterial({ color: 0x1565C0, metalness: 0.2, roughness: 0.6 }),
-                new THREE.MeshStandardMaterial({ color: 0x1565C0, metalness: 0.2, roughness: 0.6 }),
-                new THREE.MeshStandardMaterial({ color: 0x1565C0, metalness: 0.2, roughness: 0.6 }),
-                new THREE.MeshStandardMaterial({ color: 0x000000, metalness: 0.2, roughness: 0.8 }),
+                new THREE.MeshStandardMaterial({ color: 0x1565C0, metalness: 0.2, roughness: 0.6 }), // +X
+                new THREE.MeshStandardMaterial({ color: 0x1565C0, metalness: 0.2, roughness: 0.6 }), // -X
+                new THREE.MeshStandardMaterial({ color: 0x2E7D32, metalness: 0.2, roughness: 0.6 }), // +Y FRONT (green)
+                new THREE.MeshStandardMaterial({ color: 0xC62828, metalness: 0.2, roughness: 0.6 }), // -Y BACK (red)
+                new THREE.MeshStandardMaterial({ color: 0x1565C0, metalness: 0.2, roughness: 0.6 }), // +Z
+                new THREE.MeshStandardMaterial({ color: 0x000000, metalness: 0.2, roughness: 0.8 }), // -Z
             ];
             const body = new THREE.Mesh(new THREE.BoxGeometry(0.5, 2.0, 0.6), bodyMaterials);
             body.position.set(0, 0, 0.5);
@@ -160,13 +161,14 @@ class Simulation {
             rearWheel.position.set(0, -0.9, 0.35);
             this.objectGroup.add(frontWheel, rearWheel);
         } else {
+            // TYPE A (wheelchair): color front/back faces differently for orientation clarity
             const baseMaterials = [
-                new THREE.MeshStandardMaterial({ color: 0x0D47A1 }),
-                new THREE.MeshStandardMaterial({ color: 0x0D47A1 }),
-                new THREE.MeshStandardMaterial({ color: 0x0D47A1 }),
-                new THREE.MeshStandardMaterial({ color: 0x0D47A1 }),
-                new THREE.MeshStandardMaterial({ color: 0x0D47A1 }),
-                new THREE.MeshStandardMaterial({ color: 0x000000 }),
+                new THREE.MeshStandardMaterial({ color: 0x0D47A1 }), // +X
+                new THREE.MeshStandardMaterial({ color: 0x0D47A1 }), // -X
+                new THREE.MeshStandardMaterial({ color: 0x2E7D32 }), // +Y FRONT (green)
+                new THREE.MeshStandardMaterial({ color: 0xC62828 }), // -Y BACK (red)
+                new THREE.MeshStandardMaterial({ color: 0x0D47A1 }), // +Z
+                new THREE.MeshStandardMaterial({ color: 0x000000 }), // -Z
             ];
             const base = new THREE.Mesh(new THREE.BoxGeometry(1.5, 2.5, 0.4), baseMaterials);
             base.position.set(0, 0, 0.2);
