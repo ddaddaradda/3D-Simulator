@@ -96,17 +96,13 @@ export function setupEventListeners(app) {
 
     // Data source toggling
     sourceLocalBtn.addEventListener('click', () => {
-        localSourcePanel.classList.remove('hidden');
-        s3SourcePanel.classList.add('hidden');
-        sourceLocalBtn.classList.add('active');
-        sourceS3Btn.classList.remove('active');
+        localSourcePanel.classList.remove('d-none');
+        s3SourcePanel.classList.add('d-none');
     });
 
     sourceS3Btn.addEventListener('click', () => {
-        localSourcePanel.classList.add('hidden');
-        s3SourcePanel.classList.remove('hidden');
-        sourceLocalBtn.classList.remove('active');
-        sourceS3Btn.classList.add('active');
+        localSourcePanel.classList.add('d-none');
+        s3SourcePanel.classList.remove('d-none');
     });
 
     // Local file loading
@@ -119,6 +115,7 @@ export function setupEventListeners(app) {
     localImportBtn.addEventListener('click', async () => {
         const fname = fileSelect.value;
         if (!fname) return;
+        showLoader();
         setButtonLoadingState(localImportBtn, true, 'Importing...');
         try {
             const data = await api.loadLocalFile(fname);
@@ -127,6 +124,7 @@ export function setupEventListeners(app) {
         } catch (error) {
             fileMeta.textContent = `Error: ${error.message}`;
         } finally {
+            hideLoader();
             setButtonLoadingState(localImportBtn, false);
         }
     });
@@ -135,6 +133,7 @@ export function setupEventListeners(app) {
         const fname = fileSelect.value;
         if (!fname) return;
         if (!confirm(`Delete local file '${fname}'?`)) return;
+        showLoader();
         setButtonLoadingState(localDeleteBtn, true, 'Deleting...');
         try {
             await api.deleteLocalFile(fname);
@@ -143,6 +142,7 @@ export function setupEventListeners(app) {
         } catch (e) {
             fileMeta.textContent = `Error: ${e.message}`;
         } finally {
+            hideLoader();
             setButtonLoadingState(localDeleteBtn, false);
         }
     });
@@ -192,6 +192,7 @@ export function setupEventListeners(app) {
     });
 
     s3DownloadBtn.addEventListener('click', async () => {
+        showLoader();
         setButtonLoadingState(s3DownloadBtn, true, 'Downloading...');
         s3Status.textContent = 'Downloading...';
         try {
@@ -202,6 +203,7 @@ export function setupEventListeners(app) {
         } catch (error) {
             s3Status.textContent = `Download Error: ${error.message}`;
         } finally {
+            hideLoader();
             setButtonLoadingState(s3DownloadBtn, false);
         }
     });
@@ -211,6 +213,7 @@ export function setupEventListeners(app) {
             s3Status.textContent = 'No file downloaded to convert.';
             return;
         }
+        showLoader();
         setButtonLoadingState(s3ConvertBtn, true, 'Converting...');
         s3Status.textContent = 'Converting...';
         try {
@@ -221,6 +224,7 @@ export function setupEventListeners(app) {
         } catch (error) {
             s3Status.textContent = `Conversion Error: ${error.message}`;
         } finally {
+            hideLoader();
             setButtonLoadingState(s3ConvertBtn, false);
         }
     });
@@ -230,6 +234,7 @@ export function setupEventListeners(app) {
             s3Status.textContent = 'No file to move.';
             return;
         }
+        showLoader();
         setButtonLoadingState(s3MoveBtn, true, 'Moving...');
         try {
             await api.handleS3MoveToLocal(app.s3State.downloadedPath);
@@ -239,7 +244,16 @@ export function setupEventListeners(app) {
         } catch (e) {
             s3Status.textContent = `Move failed: ${e.message}`;
         } finally {
+            hideLoader();
             setButtonLoadingState(s3MoveBtn, false);
         }
     });
+}
+
+function showLoader() {
+    document.body.classList.add('is-loading');
+}
+
+function hideLoader() {
+    document.body.classList.remove('is-loading');
 }

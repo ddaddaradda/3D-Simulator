@@ -76,13 +76,14 @@ class S3Service:
             logging.error(f"An S3 error occurred: {e.response['Error']['Message']}")
             raise
 
-    def download_parquet_file_by_key(self, sensor_type: str, file_key: str) -> str:
+    def download_parquet_file_by_key(self, sensor_type: str, file_key: str, local_dir: str) -> str:
         """
         Downloads a parquet file from S3 using its full file key.
 
         Args:
             sensor_type: The type of sensor, used to determine the bucket.
             file_key: The full key of the file in the S3 bucket.
+            local_dir: The local directory to save the file in.
 
         Returns:
             The local path to the downloaded file.
@@ -94,7 +95,6 @@ class S3Service:
         if not bucket_name:
             raise ValueError(f"Invalid sensor type: {sensor_type}")
 
-        local_dir = 'temp_data'
         os.makedirs(local_dir, exist_ok=True)
         local_path = os.path.join(local_dir, os.path.basename(file_key))
 

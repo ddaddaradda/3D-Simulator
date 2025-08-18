@@ -4,107 +4,142 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>3D Simulation Comparison</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-    <div class="app-header">
-        <div class="brand">3D Orientation Simulator</div>
-        <div class="header-actions">
-            <button id="camera-mode-toggle" class="btn">Free Camera: OFF</button>
-            <button id="camera-reset" class="btn" title="Reset camera to default view">Reset View</button>
-        </div>
-    </div>
-
-    <div class="layout">
-        <aside class="sidebar">
-            <div class="panel">
-                <div class="panel-title">Dataset Source</div>
-                <div class="data-source-toggle">
-                    <button id="source-local-btn" class="btn active">Local</button>
-                    <button id="source-s3-btn" class="btn">S3</button>
-                </div>
-
-                <!-- Local File Selector -->
-                <div id="local-source-panel">
-                    <label for="file-select" class="label">File</label>
-                    <select id="file-select" class="select"></select>
-                    <div id="file-meta" class="file-meta">No file selected</div>
-                    <div class="local-actions">
-                        <button id="local-import-btn" class="btn primary">Import</button>
-                        <button id="local-delete-btn" class="btn">Delete Local</button>
-                    </div>
-                </div>
-
-                <!-- S3 Selector -->
-                
-                    <div id="s3-source-panel" class="hidden">
-                        <label for="s3-sensor-type" class="label">Sensor Type</label>
-                        <select id="s3-sensor-type" class="select">
-                            <option value="ble">BLE</option>
-                            <option value="LTE">LTE</option>
-                        </select>
-                        <label for="s3-date" class="label">Date</label>
-                        <input type="date" id="s3-date" class="select">
-                        <label for="s3-sensor-id" class="label">Sensor ID</label>
-                        <select id="s3-sensor-id" class="select" disabled>
-                            <option>Select Type/Date first</option>
-                        </select>
-                        <div class="s3-actions">
-                            <button id="s3-download-btn" class="btn" disabled>Download</button>
-                            <button id="s3-convert-btn" class="btn" disabled>Convert</button>
-                            <button id="s3-move-btn" class="btn" disabled>Move to Local</button>
-                        </div>
-                        <div id="s3-status" class="file-meta"></div>
-                    </div>
-                
-            </div>
-            <div class="panel">
-                <div class="panel-title">Object</div>
-                <label for="object-select" class="label">Type</label>
-                <select id="object-select" class="select">
-                    <option value="wheelchair">TYPE A</option>
-                    <option value="motorcycle">TYPE B</option>
-                </select>
-            </div>
-            <div class="panel small">
-                <div class="panel-title">Shortcuts</div>
-                <ul class="tips">
-                    <li>Free cam: click button → 화면 클릭</li>
-                    <li>이동: W/A/S/D, 위/아래: Space/Shift</li>
-                    <li>종료: ESC</li>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">3D Orientation Simulator</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 </ul>
+                <div class="d-flex">
+                    <button id="camera-mode-toggle" class="btn btn-outline-secondary me-2">Free Camera: OFF</button>
+                    <button id="camera-reset" class="btn btn-outline-secondary" title="Reset camera to default view">Reset View</button>
+                </div>
             </div>
-        </aside>
+        </div>
+    </nav>
 
-        <main class="content">
-            <div id="sim-container" class="simulation-container">
-                <div id="hud" class="hud">
-                    <div class="kpis">
-                        <div class="kpi"><span class="kpi-label">Pitch</span><span id="hud-pitch" class="kpi-value">0.00°</span></div>
-                        <div class="kpi"><span class="kpi-label">Roll</span><span id="hud-roll" class="kpi-value">0.00°</span></div>
-                        <div class="kpi"><span class="kpi-label">Yaw</span><span id="hud-yaw" class="kpi-value">0.00°</span></div>
+    <div class="container-fluid mt-4">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        Dataset Source
+                    </div>
+                    <div class="card-body">
+                        <div class="btn-group w-100 mb-3" role="group">
+                            <input type="radio" class="btn-check" name="source-type" id="source-local-btn" autocomplete="off" checked>
+                            <label class="btn btn-outline-primary" for="source-local-btn">Local</label>
+
+                            <input type="radio" class="btn-check" name="source-type" id="source-s3-btn" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="source-s3-btn">S3</label>
+                        </div>
+
+                        <!-- Local File Selector -->
+                        <div id="local-source-panel">
+                            <label for="file-select" class="form-label">File</label>
+                            <select id="file-select" class="form-select"></select>
+                            <div id="file-meta" class="text-muted small mt-1">No file selected</div>
+                            <div class="d-grid gap-2 mt-3">
+                                <button id="local-import-btn" class="btn btn-outline-success">Import</button>
+                                <button id="local-delete-btn" class="btn btn-outline-success">Delete Local</button>
+                            </div>
+                        </div>
+
+                        <!-- S3 Selector -->
+                        <div id="s3-source-panel" class="d-none">
+                            <label for="s3-sensor-type" class="form-label">Sensor Type</label>
+                            <select id="s3-sensor-type" class="form-select">
+                                <option value="ble">BLE</option>
+                                <option value="LTE">LTE</option>
+                            </select>
+                            <label for="s3-date" class="form-label mt-2">Date</label>
+                            <input type="date" id="s3-date" class="form-control">
+                            <label for="s3-sensor-id" class="form-label mt-2">Sensor ID</label>
+                            <select id="s3-sensor-id" class="form-select" disabled>
+                                <option>Select Type/Date first</option>
+                            </select>
+                            <div class="d-grid gap-2 mt-3">
+                                <button id="s3-download-btn" class="btn btn-outline-success" disabled>Download</button>
+                                <button id="s3-convert-btn" class="btn btn-outline-success" disabled>Convert</button>
+                                <button id="s3-move-btn" class="btn btn-outline-success" disabled>Move to Local</button>
+                            </div>
+                            <div id="s3-status" class="text-muted small mt-1"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card mb-4">
+                    <div class="card-header">
+                        Object
+                    </div>
+                    <div class="card-body">
+                        <label for="object-select" class="form-label">Type</label>
+                        <select id="object-select" class="form-select">
+                            <option value="wheelchair">TYPE A</option>
+                            <option value="motorcycle">TYPE B</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        Shortcuts
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-unstyled">
+                            <li><strong>Free cam:</strong> click button → 화면 클릭</li>
+                            <li><strong>이동:</strong> W/A/S/D, 위/아래: Space/Shift</li>
+                            <li><strong>종료:</strong> ESC</li>
+                        </ul>
                     </div>
                 </div>
             </div>
 
-            <div class="controls">
-                <div class="controls-row">
-                    <button id="play-toggle" class="btn primary">Play</button>
-                    <label for="speed-select">Speed</label>
-                    <select id="speed-select" class="select">
-                        <option value="0.5">0.5x</option>
-                        <option value="1" selected>1x</option>
-                        <option value="2">2x</option>
-                        <option value="4">4x</option>
-                    </select>
+            <main class="col-lg-9">
+                <div id="sim-container" class="simulation-container border rounded">
+                    <div id="hud" class="hud">
+                        <div class="kpis">
+                            <div class="kpi"><span class="kpi-label">Pitch</span><span id="hud-pitch" class="kpi-value">0.00°</span></div>
+                            <div class="kpi"><span class="kpi-label">Roll</span><span id="hud-roll" class="kpi-value">0.00°</span></div>
+                            <div class="kpi"><span class="kpi-label">Yaw</span><span id="hud-yaw" class="kpi-value">0.00°</span></div>
+                        </div>
+                    </div>
                 </div>
-                <div class="controls-row">
-                    <label for="time-slider">Time</label>
-                    <input type="range" id="time-slider" min="0" max="100" value="0" step="1">
-                    <span id="timestamp-display"></span>
+
+                <div class="controls mt-3 p-3 border rounded">
+                    <div class="row align-items-center">
+                        <div class="col-md-4">
+                            <button id="play-toggle" class="btn btn-primary w-100">Play</button>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="row align-items-center">
+                                <div class="col-sm-2"><label for="speed-select">Speed</label></div>
+                                <div class="col-sm-10">
+                                    <select id="speed-select" class="form-select">
+                                        <option value="0.5">0.5x</option>
+                                        <option value="1" selected>1x</option>
+                                        <option value="2">2x</option>
+                                        <option value="4">4x</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row align-items-center mt-2">
+                                <div class="col-sm-2"><label for="time-slider">Time</label></div>
+                                <div class="col-sm-8">
+                                    <input type="range" id="time-slider" class="form-range" min="0" max="100" value="0" step="1">
+                                </div>
+                                <div class="col-sm-2"><span id="timestamp-display"></span></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </main>
+            </main>
+        </div>
     </div>
 
     <!-- Three.js Library -->
@@ -116,5 +151,13 @@
 
     <!-- Main simulation script -->
     <script type="module" src="/static/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay">
+        <div class="spinner-border text-light" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
 </body>
 </html>
