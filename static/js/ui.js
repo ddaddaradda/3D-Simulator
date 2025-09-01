@@ -35,6 +35,8 @@ export const s3ConvertBtn = document.getElementById('s3-convert-btn');
 export const s3MoveBtn = document.getElementById('s3-move-btn');
 export const s3Status = document.getElementById('s3-status');
 
+let s3SensorIdChoice = null; // To hold the Choices.js instance
+
 // --- UI Helper Functions ---
 
 function setButtonLoadingState(button, isLoading, loadingText = 'Loading...') {
@@ -54,6 +56,14 @@ export function updateTimestamp(time) {
 }
 
 export function setupEventListeners(app) {
+    // Initialize the searchable dropdown for S3 sensor IDs
+    s3SensorIdChoice = new Choices(s3SensorId, {
+        searchResultLimit: 100,
+        itemSelectText: 'Select',
+        searchPlaceholderValue: 'Type to search...',
+        removeItemButton: true,
+    });
+
     timeSlider.addEventListener('input', (event) => {
         const idx = parseInt(event.target.value, 10);
         app.sim.playIndex = idx;
@@ -154,29 +164,25 @@ export function setupEventListeners(app) {
         if (!sensorType || !date) return;
 
         s3Status.textContent = 'Loading sensor IDs...';
-        s3SensorId.disabled = true;
-        s3SensorId.innerHTML = '<option>Loading...</option>';
+        s3SensorIdChoice.disable();
+        s3SensorIdChoice.clearStore();
+        s3SensorIdChoice.setChoices([{ value: '', label: 'Loading...' }], 'value', 'label', true);
         s3DownloadBtn.disabled = true;
         s3ConvertBtn.disabled = true;
 
         try {
             const files = await api.fetchSensorIds(sensorType, date);
-            s3SensorId.innerHTML = '<option value="">-- Select Sensor ID --</option>';
             if (files.length > 0) {
-                files.forEach(file => {
-                    const option = document.createElement('option');
-                    option.value = file.fileKey;
-                    option.textContent = file.displayName;
-                    s3SensorId.appendChild(option);
-                });
-                s3SensorId.disabled = false;
+                const choices = files.map(file => ({ value: file.fileKey, label: file.displayName }));
+                s3SensorIdChoice.setChoices(choices, 'value', 'label', true);
+                s3SensorIdChoice.enable();
                 s3Status.textContent = 'Please select a sensor ID.';
             } else {
-                s3SensorId.innerHTML = '<option>No sensors found</option>';
+                s3SensorIdChoice.setChoices([{ value: '', label: 'No sensors found' }], 'value', 'label', true);
                 s3Status.textContent = 'No sensors found for the selected date.';
             }
         } catch (error) {
-            s3SensorId.innerHTML = '<option>Error loading IDs</option>';
+            s3SensorIdChoice.setChoices([{ value: '', label: 'Error loading IDs' }], 'value', 'label', true);
             s3Status.textContent = `Error: ${error.message}`;
         }
     };
@@ -185,7 +191,7 @@ export function setupEventListeners(app) {
     s3Date.addEventListener('change', handleSensorIdFetch);
 
     s3SensorId.addEventListener('change', () => {
-        s3DownloadBtn.disabled = !s3SensorId.value;
+        s3DownloadBtn.disabled = !s3SensorIdChoice.getValue(true);
         s3ConvertBtn.disabled = true;
         s3MoveBtn.disabled = true;
         app.s3State.downloadedPath = null;
@@ -196,7 +202,7 @@ export function setupEventListeners(app) {
         setButtonLoadingState(s3DownloadBtn, true, 'Downloading...');
         s3Status.textContent = 'Downloading...';
         try {
-            const localPath = await api.handleS3Download(s3SensorType.value, s3SensorId.value);
+            const localPath = await api.handleS3Download(s3SensorType.value, s3SensorIdChoice.getValue(true));
             app.s3State.downloadedPath = localPath;
             s3Status.textContent = `Downloaded. Ready to convert.`;
             s3ConvertBtn.disabled = false;
