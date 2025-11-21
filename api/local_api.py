@@ -6,7 +6,7 @@ from typing import List, Optional, Dict, Any
 import pandas as pd
 from flask import Blueprint, jsonify, request, current_app
 
-from simulation_processor import process_parquet_file
+from services.simulation_processor import process_parquet_file
 
 local_api = Blueprint('local_api', __name__)
 

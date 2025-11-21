@@ -29,7 +29,8 @@ This project is a web-based 3D simulation tool designed to visualize and analyze
 │   └── s3_api.py         # Routes for S3 operations
 ├── data/                 # Default directory for local Parquet files
 ├── services/             # Business logic services
-│   └── s3_service.py     # Handles interaction with AWS S3
+│   ├── s3_service.py     # Handles interaction with AWS S3
+│   └── simulation_processor.py # Logic for processing Parquet data
 ├── static/               # Frontend assets
 │   ├── js/               # Modular JavaScript files
 │   │   ├── api.js
@@ -41,7 +42,7 @@ This project is a web-based 3D simulation tool designed to visualize and analyze
 ├── api_server.py         # Main Flask application file
 ├── config.py             # Application configuration
 ├── index.html            # Main HTML file
-├── simulation_processor.py # Logic for processing Parquet data
+
 └── pyproject.toml        # Project dependencies
 ```
 
@@ -63,7 +64,7 @@ This project is a web-based 3D simulation tool designed to visualize and analyze
 2.  **Create a virtual environment and install dependencies:**
     ```bash
     uv venv
-    uv pip install -r requirements.txt 
+    uv pip install -r pyproject.toml 
     # Or if you have uv installed globally
     uv pip install -r pyproject.toml
     ```

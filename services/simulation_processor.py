@@ -20,24 +20,25 @@ def process_parquet_file(file_path: str) -> Dict[str, Any]:
 
     # Calculated by integrating gyro (simple integration)
     df['dt'] = df['time'].diff().fillna(0) / 1000.0
-    calculated_orientations = np.zeros((len(df), 3))  # yaw, pitch, roll
-    
+    # Vectorized calculation
     gyro_sensitivity = config.GYRO_SENSITIVITY
+    
+    # Convert gyro data to radians
+    gyro_x_rad = np.deg2rad(df['GYRO_X'].values / gyro_sensitivity)
+    gyro_y_rad = np.deg2rad(df['GYRO_Y'].values / gyro_sensitivity)
+    gyro_z_rad = np.deg2rad(df['GYRO_Z'].values / gyro_sensitivity)
+    dt = df['dt'].values
 
-    for i in range(1, len(df)):
-        dt = float(df.loc[i, 'dt'])
-        gyro_x_rad = float(np.deg2rad(df.loc[i, 'GYRO_X'] / gyro_sensitivity))
-        gyro_y_rad = float(np.deg2rad(df.loc[i, 'GYRO_Y'] / gyro_sensitivity))
-        gyro_z_rad = float(np.deg2rad(df.loc[i, 'GYRO_Z'] / gyro_sensitivity))
-        
-        # Update orientations
-        calculated_orientations[i, 0] = calculated_orientations[i - 1, 0] + gyro_z_rad * dt  # yaw
-        calculated_orientations[i, 1] = calculated_orientations[i - 1, 1] + gyro_x_rad * dt  # pitch
-        calculated_orientations[i, 2] = calculated_orientations[i - 1, 2] + gyro_y_rad * dt  # roll
+    # Integrate (Cumulative Sum)
+    # yaw (z), pitch (x), roll (y)
+    # Use cumsum to integrate angular velocity * dt
+    yaw = np.cumsum(gyro_z_rad * dt)
+    pitch = np.cumsum(gyro_x_rad * dt)
+    roll = np.cumsum(gyro_y_rad * dt)
 
-    df['calculated_yaw'] = calculated_orientations[:, 0]
-    df['calculated_pitch'] = calculated_orientations[:, 1]
-    df['calculated_roll'] = calculated_orientations[:, 2]
+    df['calculated_yaw'] = yaw
+    df['calculated_pitch'] = pitch
+    df['calculated_roll'] = roll
 
     # Original (deg -> rad), yaw assumed 0
     df['original_pitch'] = np.deg2rad(df['PITCH'])

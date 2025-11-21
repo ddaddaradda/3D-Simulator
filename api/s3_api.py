@@ -3,7 +3,7 @@ import logging
 
 from flask import Blueprint, jsonify, request, current_app
 
-from simulation_processor import process_parquet_file
+from services.simulation_processor import process_parquet_file
 
 s3_api = Blueprint('s3_api', __name__)
 
