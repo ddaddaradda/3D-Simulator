@@ -21,9 +21,14 @@ def list_s3_sensors():
         files = current_app.s3_service.list_sensor_files(sensor_type, date_str)
         return jsonify({'files': files})
     except ConnectionError as e:
-        return jsonify({'error': str(e)}), 503 # Service Unavailable
+        logging.error(f"S3 Connection Error: {e}")
+        return jsonify({'error': f'S3 connection failed: {str(e)}'}), 503 # Service Unavailable
     except ValueError as e:
+        logging.error(f"S3 Value Error: {e}")
         return jsonify({'error': str(e)}), 400
+    except Exception as e:
+        logging.error(f"Unexpected error in list_s3_sensors: {e}", exc_info=True)
+        return jsonify({'error': f'Unexpected error: {str(e)}'}), 500
 
 @s3_api.route('/s3/download', methods=['POST'])
 def download_s3_file():

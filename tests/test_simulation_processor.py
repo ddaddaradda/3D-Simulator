@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 import pytest
-from simulation_processor import process_parquet_file
+from services.simulation_processor import process_parquet_file
 
 @pytest.fixture
 def temp_parquet_file(tmp_path):
